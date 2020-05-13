@@ -12,6 +12,6 @@
         "ui:field": "targetConnection"
     },
     "tags": {
-        "ui:field": "tagsInput"
+        "ui:field": "tags"
     }
 }

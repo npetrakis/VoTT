@@ -101,6 +101,10 @@ export const japanese: IAppStrings = {
             frameExtractionRate: "フレーム抽出率（ビデオ 1 秒あたりのフレーム数）",  // Frame Extraction Rate (frames per a video second)"
         },
         addConnection: "接続を追加", // Add Connection,
+        tagUpload: { //TODO: Add Localizations
+            noTagsImportedYet: "Upload the CSV file with your tags",
+            tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
+        },
         messages: {
             saveSuccess: "${project.name} プロジェクト設定を正常に保存しました", // Successfully saved ${project.name} project settings"
         },

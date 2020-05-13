@@ -99,6 +99,10 @@ export const english: IAppStrings = {
             frameExtractionRate: "Frame Extraction Rate (frames per a video second)",
         },
         addConnection: "Add Connection",
+        tagUpload: {
+            noTagsImportedYet: "Upload the CSV file with your tags",
+            tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
+        },
         messages: {
             saveSuccess: "Successfully saved ${project.name} project settings",
         },

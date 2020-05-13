@@ -1,8 +1,9 @@
 import React from "react";
+import CSVReader, { CSVReaderProps, IFileInfo } from "react-csv-reader"
 import Form, { FormValidation, ISubmitEvent, IChangeEvent, Widget } from "react-jsonschema-form";
 import { ITagsInputProps, TagEditorModal, TagsInput } from "vott-react";
 import { addLocValues, strings } from "../../../../common/strings";
-import { IConnection, IProject, ITag, IAppSettings } from "../../../../models/applicationState";
+import { IConnection, IProject, ITag, IAppSettings, AppError, ErrorCode } from "../../../../models/applicationState";
 import { StorageProviderFactory } from "../../../../providers/storage/storageProviderFactory";
 import { ConnectionPickerWithRouter } from "../../common/connectionPicker/connectionPicker";
 import { CustomField } from "../../common/customField/customField";
@@ -10,13 +11,12 @@ import CustomFieldTemplate from "../../common/customField/customFieldTemplate";
 import { ISecurityTokenPickerProps, SecurityTokenPicker } from "../../common/securityTokenPicker/securityTokenPicker";
 import "vott-react/dist/css/tagsInput.css";
 import { IConnectionProviderPickerProps } from "../../common/connectionProviderPicker/connectionProviderPicker";
-import LocalFolderPicker from "../../common/localFolderPicker/localFolderPicker";
-
+import { tagColors } from "./tagColors"
 // tslint:disable-next-line:no-var-requires
 const formSchema = addLocValues(require("./projectForm.json"));
 // tslint:disable-next-line:no-var-requires
 const uiSchema = addLocValues(require("./projectForm.ui.json"));
-
+  
 /**
  * Required properties for Project Settings form
  * @member project - Current project to fill form
@@ -52,12 +52,13 @@ export interface IProjectFormState {
  * @description - Form for editing or creating VoTT projects
  */
 export default class ProjectForm extends React.Component<IProjectFormProps, IProjectFormState> {
-    private widgets = {
-        localFolderPicker: (LocalFolderPicker as any) as Widget,
-    };
-
     private tagsInput: React.RefObject<TagsInput>;
     private tagEditorModal: React.RefObject<TagEditorModal>;
+    private currentColorIndex: number = 0
+    private papaparseOptions = {
+        header: false,
+        skipEmptyLines: true,
+      }
 
     constructor(props, context) {
         super(props, context);
@@ -71,7 +72,6 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         };
         this.tagsInput = React.createRef<TagsInput>();
         this.tagEditorModal = React.createRef<TagEditorModal>();
-
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.onFormCancel = this.onFormCancel.bind(this);
         this.onFormValidate = this.onFormValidate.bind(this);
@@ -100,7 +100,6 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
                 FieldTemplate={CustomFieldTemplate}
                 validate={this.onFormValidate}
                 fields={this.fields()}
-                widgets={this.widgets}
                 schema={this.state.formSchema}
                 uiSchema={this.state.uiSchema}
                 formData={this.state.formData}
@@ -153,16 +152,46 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
                     onChange: props.onChange,
                 };
             }),
-            tagsInput: CustomField<ITagsInputProps>(TagsInput, (props) => {
+            tags: CustomField<CSVReaderProps>(CSVReader, (props) => {
                 return {
-                    tags: props.formData,
-                    onChange: props.onChange,
-                    placeHolder: strings.tags.placeholder,
-                    onShiftTagClick: this.onTagShiftClick,
-                    ref: this.tagsInput,
+                    onFileLoaded: (data: Array<any>, fileInfo: IFileInfo) => {
+                        var tags = []
+                        var tagNames = [] 
+                        data.forEach(element => {
+                            const name = element.join(" ")
+                            if (tagNames.indexOf(name) == -1) {
+                                tags.push({
+                                    name: name,
+                                    color: this.fetchNextColor()
+                                })
+                                tagNames.push(name)
+                            }
+                           
+                        });
+                        props.onChange(tags)
+                    },
+                    parserOptions: this.papaparseOptions,
+                    label: this.getTagLabel(props),
+                    id: props.idSchema.$id,
+                    value: props.formData
                 };
-            }),
+
+            })
         };
+    }
+
+    private getTagLabel(props) {
+        if (props.formData == undefined) {
+            return strings.projectSettings.tagUpload.noTagsImportedYet
+        } else {
+            return strings.projectSettings.tagUpload.tagsAlreadyImported
+        }
+    }
+    private fetchNextColor(): string {
+        const keys = Object.keys(tagColors)
+        const chosenColor = tagColors[keys[this.currentColorIndex]]
+        this.currentColorIndex = (this.currentColorIndex + 1) % keys.length
+        return chosenColor
     }
 
     private onTagShiftClick(tag: ITag) {

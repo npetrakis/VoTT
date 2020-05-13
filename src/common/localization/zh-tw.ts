@@ -101,6 +101,10 @@ export const chinesetw: IAppStrings = {
             frameExtractionRate: "影像取樣率（影像每秒的畫面數）", // Frame Extraction Rate (frames per a video second)
         },
         addConnection: "新增連線", // Add Connection
+        tagUpload: { //TODO: Add Localizations
+            noTagsImportedYet: "Upload the CSV file with your tags",
+            tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
+        },
         messages: {
             saveSuccess: "已成功保存${project.name}專案設定", // Successfully saved ${project.name} project settings
         },

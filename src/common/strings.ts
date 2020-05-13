@@ -105,6 +105,10 @@ export interface IAppStrings {
             frameExtractionRate: string;
         },
         addConnection: string,
+        tagUpload: {
+            noTagsImportedYet: string,
+            tagsAlreadyImported: string,
+        }
         messages: {
             saveSuccess: string;
         },
