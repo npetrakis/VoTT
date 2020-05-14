@@ -6,6 +6,12 @@
   flex-direction: row;
   min-height: fit-content;
 
+
+
+  input[type=file] {
+    display: block;
+  }
+
   &-settings {
     flex-grow: 1;
   }
@@ -79,8 +85,4 @@
 .assetCount {
   display: flex;
   align-items: center;
-}
-
-input[type=file] {
-  display: block;
 }
