@@ -8,6 +8,7 @@ import { StorageProviderFactory } from "../../../../providers/storage/storagePro
 import { IApplicationState, IProject, AppError, ErrorCode } from "../../../../models/applicationState";
 import IProjectActions, * as projectActions from "../../../../redux/actions/projectActions";
 import IApplicationActions, * as applicationActions from "../../../../redux/actions/applicationActions";
+import IConnectionActions, * as connectionActions from "../../../../redux/actions/connectionActions";
 import createReduxStore from "../../../../redux/store/store";
 import CondensedList from "../../common/condensedList/condensedList";
 import Confirm, { IConfirmProps } from "../../common/confirm/confirm";
@@ -272,6 +273,7 @@ describe("Homepage Component", () => {
             },
             actions: (projectActions as any) as IProjectActions,
             applicationActions: (applicationActions as any) as IApplicationActions,
+            connectionActions: (connectionActions as any) as IConnectionActions,
             appSettings: {
                 devToolsEnabled: false,
                 securityTokens: [],

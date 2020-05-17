@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { strings, interpolate } from "../../../../common/strings";
 import IProjectActions, * as projectActions from "../../../../redux/actions/projectActions";
 import IApplicationActions, * as applicationActions from "../../../../redux/actions/applicationActions";
+import IConnectionActions, * as connectionActions from "../../../../redux/actions/connectionActions";
 import { CloudFilePicker } from "../../common/cloudFilePicker/cloudFilePicker";
 import CondensedList from "../../common/condensedList/condensedList";
 import Confirm from "../../common/confirm/confirm";
@@ -28,6 +29,7 @@ export interface IHomePageProps extends RouteComponentProps, React.Props<HomePag
     actions: IProjectActions;
     applicationActions: IApplicationActions;
     appSettings: IAppSettings;
+    connectionActions: IConnectionActions;
     project: IProject;
 }
 
@@ -48,6 +50,7 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(projectActions, dispatch),
         applicationActions: bindActionCreators(applicationActions, dispatch),
+        connectionActions: bindActionCreators(connectionActions, dispatch)
     };
 }
 
@@ -60,6 +63,12 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
     private deleteConfirm: React.RefObject<Confirm> = React.createRef();
     private cloudFilePicker: React.RefObject<CloudFilePicker> = React.createRef();
     private importConfirm: React.RefObject<Confirm> = React.createRef();
+
+    public componentDidMount() {
+        this.props.connectionActions.fetchAzureContainerConnections().then( connections => {
+            console.log("SUCCESS")
+        })
+    }
 
     public render() {
         return (

@@ -9,6 +9,7 @@ import {
     ILoadConnectionAction,
     ISaveConnectionAction,
     IDeleteConnectionAction,
+    ISaveConnectionsAction,
 } from "./connectionActions";
 import {
     ILoadProjectAction,
@@ -77,6 +78,7 @@ export type AnyAction = IOtherAction |
     IEnsureSecurityTokenAction |
     ILoadConnectionAction |
     ISaveConnectionAction |
+    ISaveConnectionsAction |
     IDeleteConnectionAction |
     ILoadProjectAction |
     ICloseProjectAction |
