@@ -15,7 +15,6 @@ import CondensedList, { ListItem } from "../condensedList/condensedList";
 export interface ICloudFilePickerProps {
     connections: IConnection[];
     onSubmit: (content: string) => void;
-
     onCancel?: () => void;
     fileExtension?: string;
 }
@@ -60,7 +59,11 @@ export class CloudFilePicker extends React.Component<ICloudFilePickerProps, IClo
         this.fileList = this.fileList.bind(this);
         this.onClickFile = this.onClickFile.bind(this);
 
-        this.state = this.getInitialState();
+        this.state = this.getInitialState(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.state = this.getInitialState(nextProps);
     }
 
     public render() {
@@ -103,7 +106,7 @@ export class CloudFilePicker extends React.Component<ICloudFilePickerProps, IClo
      * Close Cloud File Picker
      */
     public close(): void {
-        this.setState(this.getInitialState(),
+        this.setState(this.getInitialState(this.props),
             () => {
                 if (this.props.onCancel) {
                     this.props.onCancel();
@@ -112,11 +115,11 @@ export class CloudFilePicker extends React.Component<ICloudFilePickerProps, IClo
         );
     }
 
-    private getInitialState(): ICloudFilePickerState {
+    private getInitialState(props: ICloudFilePickerProps): ICloudFilePickerState {
         return {
             isOpen: false,
             modalHeader: strings.homePage.openCloudProject.selectConnection,
-            condensedList: this.connectionList(),
+            condensedList: this.connectionList(props),
             selectedConnection: null,
             selectedFile: null,
             okDisabled: true,
@@ -134,7 +137,7 @@ export class CloudFilePicker extends React.Component<ICloudFilePickerProps, IClo
 
     private back() {
         this.setState({
-            ...this.getInitialState(),
+            ...this.getInitialState(this.props),
             isOpen: true,
         });
     }
@@ -162,8 +165,8 @@ export class CloudFilePicker extends React.Component<ICloudFilePickerProps, IClo
         return connections.filter(this.isCloudConnection);
     }
 
-    private connectionList() {
-        const connections = this.getCloudConnections(this.props.connections);
+    private connectionList(props: ICloudFilePickerProps) {
+        const connections = this.getCloudConnections(props.connections);
         return this.getCondensedList("Cloud Connections", connections, (args) => this.onClickConnection(args));
     }
 
