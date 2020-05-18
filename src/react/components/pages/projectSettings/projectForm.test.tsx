@@ -57,10 +57,8 @@ describe("Project Form Component", () => {
         it("starting project has initial state loaded correctly", () => {
             const formData = wrapper.state().formData;
             expect(formData.name).toEqual(project.name);
-            expect(formData.sourceConnection).toEqual(project.sourceConnection);
-            expect(formData.targetConnection).toEqual(project.targetConnection);
-            expect(formData.videoSettings).toEqual(project.videoSettings);
-            expect(formData.description).toEqual(project.description);
+            expect(formData.connection).toEqual(project.sourceConnection);
+            expect(formData.connection).toEqual(project.targetConnection);
             expect(project.tags.length).toBeGreaterThan(0);
             expect(formData.tags).toEqual(project.tags);
         });
@@ -90,35 +88,15 @@ describe("Project Form Component", () => {
             expect(onSubmitHandler).toBeCalledWith(expectedProject);
         });
 
-        it("starting project should update description upon submission", () => {
-            const newDescription = "My new description";
-            const currentDescription = wrapper.state().formData.description;
-            expect(currentDescription).not.toEqual(newDescription);
-            expect(currentDescription).toEqual(project.description);
-            wrapper.find("textarea#root_description").simulate("change", { target: { value: newDescription } });
-            expect(wrapper.state().formData.description).toEqual(newDescription);
-
-            const form = wrapper.find("form");
-            form.simulate("submit");
-
-            const expectedProject = {
-                ...project,
-                description: newDescription,
-            };
-
-            expect(onChangeHandler).toBeCalledWith(expect.objectContaining(project));
-            expect(onSubmitHandler).toBeCalledWith(expectedProject);
-        });
-
         it("starting project should update source connection ID upon submission", () => {
             const newConnection = connections[1];
-            const currentConnectionId = wrapper.state().formData.sourceConnection.id;
+            const currentConnectionId = wrapper.state().formData.connection.id;
             expect(currentConnectionId).not.toEqual(newConnection.id);
             expect(currentConnectionId).toEqual(project.sourceConnection.id);
             expect(wrapper.find("select#root_sourceConnection").exists()).toBe(true);
             wrapper.find("select#root_sourceConnection").simulate("change", { target: { value: newConnection.id } });
 
-            expect(wrapper.state().formData.sourceConnection).toEqual(newConnection);
+            expect(wrapper.state().formData.connection).toEqual(newConnection);
             const form = wrapper.find("form");
             form.simulate("submit");
 
@@ -133,12 +111,12 @@ describe("Project Form Component", () => {
 
         it("starting project should update target connection ID upon submission", () => {
             const newConnection = connections[1];
-            const currentConnectionId = wrapper.state().formData.targetConnection.id;
+            const currentConnectionId = wrapper.state().formData.connection.id;
             expect(currentConnectionId).not.toEqual(newConnection.id);
             expect(currentConnectionId).toEqual(project.targetConnection.id);
             expect(wrapper.find("select#root_targetConnection").exists()).toBe(true);
             wrapper.find("select#root_targetConnection").simulate("change", { target: { value: newConnection.id } });
-            expect(wrapper.state().formData.targetConnection).toEqual(newConnection);
+            expect(wrapper.state().formData.connection).toEqual(newConnection);
             wrapper.find("form").simulate("submit");
 
             const expectedProject = {
@@ -236,10 +214,7 @@ describe("Project Form Component", () => {
             const formData = wrapper.state().formData;
             const defaultVideoSettings: IProjectVideoSettings = { frameExtractionRate: 15 };
             expect(formData.name).toBe(undefined);
-            expect(formData.sourceConnection).toEqual({});
-            expect(formData.targetConnection).toEqual({});
-            expect(formData.videoSettings).toEqual(defaultVideoSettings);
-            expect(formData.description).toBe(undefined);
+            expect(formData.connection).toEqual({});
             expect(formData.tags).toBe(undefined);
         });
 

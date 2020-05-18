@@ -120,6 +120,12 @@ export interface IProject {
     lastVisitedAssetId?: string;
 }
 
+export interface IUIProject {
+    name: string;
+    securityToken: string;
+    tags: ITag[];
+    connection: IConnection;
+}
 /**
  * @name - FileInfo
  * @description - Defines the file information and content for V1 projects
