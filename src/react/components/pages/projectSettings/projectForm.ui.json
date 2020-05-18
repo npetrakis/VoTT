@@ -1,7 +1,4 @@
 {
-    "securityToken": {
-        "ui:field": "securityToken"
-    },
     "connection": {
         "ui:field": "connection"
     },

@@ -55,10 +55,10 @@ export default function Sidebar({ project }) {
                 </li>
             </ul>
             <div className="app-sidebar-fill"></div>
-            <ul>
+            {/* <ul>
                 <li><NavLink title={strings.appSettings.title}
                     to={`/settings`}><i className="fas fa-cog"></i></NavLink></li>
-            </ul>
+            </ul> */}
         </div>
     );
 }

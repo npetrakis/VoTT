@@ -8,7 +8,7 @@ import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import createReduxStore from "./redux/store/store";
-import initialState from "./redux/store/initialState";
+import getInitialState from "./redux/store/initialState";
 import { IApplicationState } from "./models/applicationState";
 import registerProviders from "./registerProviders";
 import registerMixins from "./registerMixins";
@@ -19,8 +19,8 @@ setUpAppInsights();
 
 registerMixins();
 registerProviders();
-const defaultState: IApplicationState = initialState;
-const store = createReduxStore(defaultState, true);
+const defaultState: IApplicationState = getInitialState();
+const store = createReduxStore(defaultState, false);
 
 ReactDOM.render(
     <Provider store={store}>

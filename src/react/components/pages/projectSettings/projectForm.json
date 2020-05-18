@@ -1,11 +1,6 @@
 {
     "type": "object",
     "properties": {
-        "securityToken": {
-            "title": "${strings.projectSettings.securityToken.title}",
-            "description": "${strings.projectSettings.securityToken.description}",
-            "type": "string"
-        },
         "connection": {
             "title": "${strings.projectSettings.sourceConnection.title}",
             "description": "${strings.projectSettings.sourceConnection.description}",

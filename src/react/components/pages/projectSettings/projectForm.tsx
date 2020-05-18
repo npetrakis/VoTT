@@ -1,14 +1,12 @@
 import React from "react";
 import CSVReader, { CSVReaderProps, IFileInfo } from "react-csv-reader"
 import Form, { FormValidation, ISubmitEvent, IChangeEvent, Widget } from "react-jsonschema-form";
-import { ITagsInputProps, TagEditorModal, TagsInput } from "vott-react";
+import { TagEditorModal, TagsInput } from "vott-react";
 import { addLocValues, strings } from "../../../../common/strings";
 import { IConnection, IProject, ITag, IAppSettings, AppError, ErrorCode, IUIProject } from "../../../../models/applicationState";
-import { StorageProviderFactory } from "../../../../providers/storage/storageProviderFactory";
 import { ConnectionPickerWithRouter } from "../../common/connectionPicker/connectionPicker";
 import { CustomField } from "../../common/customField/customField";
 import CustomFieldTemplate from "../../common/customField/customFieldTemplate";
-import { ISecurityTokenPickerProps, SecurityTokenPicker } from "../../common/securityTokenPicker/securityTokenPicker";
 import "vott-react/dist/css/tagsInput.css";
 import { IConnectionProviderPickerProps } from "../../common/connectionProviderPicker/connectionProviderPicker";
 import { tagColors } from "./tagColors"
@@ -77,6 +75,7 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
                 tags: this.props.project.tags
             };
         }
+        this.project.securityToken = this.props.appSettings.securityTokens[0].key
         this.state = {
             classNames: ["needs-validation"],
             uiSchema: { ...uiSchema },
@@ -144,13 +143,6 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
 
     private fields() {
         return {
-            securityToken: CustomField<ISecurityTokenPickerProps>(SecurityTokenPicker, (props) => ({
-                id: props.idSchema.$id,
-                schema: props.schema,
-                value: props.formData,
-                securityTokens: this.props.appSettings.securityTokens,
-                onChange: props.onChange,
-            })),
             connection: CustomField<IConnectionProviderPickerProps>(ConnectionPickerWithRouter, (props) => {
                 return {
                     id: props.idSchema.$id,

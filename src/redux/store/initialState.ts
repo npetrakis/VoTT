@@ -1,4 +1,5 @@
 import { IApplicationState } from "../../models/applicationState";
+require('dotenv').config();
 
 /**
  * Initial state of application
@@ -7,6 +8,8 @@ import { IApplicationState } from "../../models/applicationState";
  * @member recentProjects - Recent projects
  * @member currentProject - Current project
  */
+
+
 const initialState: IApplicationState = {
     appSettings: {
         devToolsEnabled: false,
@@ -18,7 +21,13 @@ const initialState: IApplicationState = {
     appError: null,
 };
 
-/**
- * Instance of initial application state
- */
-export default initialState;
+export default function getInitialState(): IApplicationState {
+    var state = initialState;
+    state.appSettings.securityTokens.push(
+        {
+            name: process.env.REACT_APP_SECURITY_TOKEN_NAME,
+            key: process.env.REACT_APP_SECURITY_TOKEN_KEY
+        }
+    );
+    return state;
+}
