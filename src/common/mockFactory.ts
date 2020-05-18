@@ -388,8 +388,8 @@ export default class MockFactory {
     public static createAzureOptions(): IAzureCloudStorageOptions {
         return {
             accountName: "myaccount",
-            containerName: "container0",
             sas: "sas",
+            containerName: "container0",
             createContainer: undefined,
         };
     }
@@ -839,6 +839,8 @@ export default class MockFactory {
             loadConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             saveConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             deleteConnection: jest.fn((connection: IConnection) => Promise.resolve()),
+            saveConnections: jest.fn((connections: IConnection[]) => Promise.resolve()),
+            fetchAzureContainerConnections: jest.fn(() => Promise.resolve())
         };
     }
 

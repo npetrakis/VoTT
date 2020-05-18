@@ -1,14 +1,12 @@
 import React from "react";
 import CSVReader, { CSVReaderProps, IFileInfo } from "react-csv-reader"
 import Form, { FormValidation, ISubmitEvent, IChangeEvent, Widget } from "react-jsonschema-form";
-import { ITagsInputProps, TagEditorModal, TagsInput } from "vott-react";
+import { TagEditorModal, TagsInput } from "vott-react";
 import { addLocValues, strings } from "../../../../common/strings";
-import { IConnection, IProject, ITag, IAppSettings, AppError, ErrorCode } from "../../../../models/applicationState";
-import { StorageProviderFactory } from "../../../../providers/storage/storageProviderFactory";
+import { IConnection, IProject, ITag, IAppSettings, AppError, ErrorCode, IUIProject } from "../../../../models/applicationState";
 import { ConnectionPickerWithRouter } from "../../common/connectionPicker/connectionPicker";
 import { CustomField } from "../../common/customField/customField";
 import CustomFieldTemplate from "../../common/customField/customFieldTemplate";
-import { ISecurityTokenPickerProps, SecurityTokenPicker } from "../../common/securityTokenPicker/securityTokenPicker";
 import "vott-react/dist/css/tagsInput.css";
 import { IConnectionProviderPickerProps } from "../../common/connectionProviderPicker/connectionProviderPicker";
 import { tagColors } from "./tagColors"
@@ -42,7 +40,7 @@ export interface IProjectFormProps extends React.Props<ProjectForm> {
  */
 export interface IProjectFormState {
     classNames: string[];
-    formData: IProject;
+    formData: IUIProject;
     formSchema: any;
     uiSchema: any;
 }
@@ -55,6 +53,11 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
     private tagsInput: React.RefObject<TagsInput>;
     private tagEditorModal: React.RefObject<TagEditorModal>;
     private currentColorIndex: number = 0
+    private project: IProject = {
+        videoSettings: {
+            frameExtractionRate: 15
+        }
+    } as IProject
     private papaparseOptions = {
         header: false,
         skipEmptyLines: true,
@@ -62,13 +65,22 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
 
     constructor(props, context) {
         super(props, context);
+        var formData = null;
+        if (props.project) {
+            this.project = props.project
+            formData = {
+                name: this.props.project.name,
+                connection: this.props.project.sourceConnection,
+                securityToken: this.props.project.securityToken,
+                tags: this.props.project.tags
+            };
+        }
+        this.project.securityToken = this.props.appSettings.securityTokens[0].key
         this.state = {
             classNames: ["needs-validation"],
             uiSchema: { ...uiSchema },
             formSchema: { ...formSchema },
-            formData: {
-                ...this.props.project,
-            },
+            formData: formData,
         };
         this.tagsInput = React.createRef<TagsInput>();
         this.tagEditorModal = React.createRef<TagEditorModal>();
@@ -85,7 +97,12 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
     public componentDidUpdate(prevProps: IProjectFormProps) {
         if (prevProps.project !== this.props.project) {
             this.setState({
-                formData: { ...this.props.project },
+                formData: { 
+                    name: this.props.project.name,
+                    connection: this.props.project.sourceConnection,
+                    securityToken: this.props.project.securityToken,
+                    tags: this.props.project.tags
+                 },
             });
         }
     }
@@ -126,29 +143,11 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
 
     private fields() {
         return {
-            securityToken: CustomField<ISecurityTokenPickerProps>(SecurityTokenPicker, (props) => ({
-                id: props.idSchema.$id,
-                schema: props.schema,
-                value: props.formData,
-                securityTokens: this.props.appSettings.securityTokens,
-                onChange: props.onChange,
-            })),
-            sourceConnection: CustomField<IConnectionProviderPickerProps>(ConnectionPickerWithRouter, (props) => {
+            connection: CustomField<IConnectionProviderPickerProps>(ConnectionPickerWithRouter, (props) => {
                 return {
                     id: props.idSchema.$id,
                     value: props.formData,
                     connections: this.props.connections,
-                    onChange: props.onChange,
-                };
-            }),
-            targetConnection: CustomField<IConnectionProviderPickerProps>(ConnectionPickerWithRouter, (props) => {
-                const targetConnections = this.props.connections
-                    .filter((connection) => StorageProviderFactory.isRegistered(connection.providerType));
-
-                return {
-                    id: props.idSchema.$id,
-                    value: props.formData,
-                    connections: targetConnections,
                     onChange: props.onChange,
                 };
             }),
@@ -203,13 +202,9 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         this.tagEditorModal.current.close();
     }
 
-    private onFormValidate(project: IProject, errors: FormValidation) {
-        if (Object.keys(project.sourceConnection).length === 0) {
-            errors.sourceConnection.addError("is a required property");
-        }
-
-        if (Object.keys(project.targetConnection).length === 0) {
-            errors.targetConnection.addError("is a required property");
+    private onFormValidate(project: IUIProject, errors: FormValidation) {
+        if (Object.keys(project.connection).length === 0) {
+            errors.connection.addError("is a required property");
         }
 
         if (this.state.classNames.indexOf("was-validated") === -1) {
@@ -221,17 +216,30 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         return errors;
     }
 
-    private onFormChange = (changeEvent: IChangeEvent<IProject>) => {
+    private onFormChange = (changeEvent: IChangeEvent<IUIProject>) => {
         if (this.props.onChange) {
-            this.props.onChange(changeEvent.formData);
+            const uiProject: IUIProject = {
+                ...changeEvent.formData,
+            };
+            this.setProject(uiProject)
+            this.props.onChange(this.project);
         }
     }
 
-    private onFormSubmit(args: ISubmitEvent<IProject>) {
-        const project: IProject = {
+    private onFormSubmit(args: ISubmitEvent<IUIProject>) {
+        const uiProject: IUIProject = {
             ...args.formData,
         };
-        this.props.onSubmit(project);
+        this.setProject(uiProject)
+        this.props.onSubmit(this.project);
+    }
+
+    private setProject(uiProject: IUIProject) {
+        this.project.name = uiProject.connection.name
+        this.project.securityToken = uiProject.securityToken
+        this.project.sourceConnection = uiProject.connection
+        this.project.targetConnection = uiProject.connection
+        this.project.tags = uiProject.tags
     }
 
     private onFormCancel() {
