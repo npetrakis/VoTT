@@ -6,6 +6,7 @@ import { Dispatch } from "redux";
 import ConnectionService from "../../services/connectionService";
 import { IAzureCloudStorageOptions, AzureBlobStorage } from "../../providers/storage/azureBlobStorage";
 import { connect } from "net";
+import { StorageProviderFactory } from "../../providers/storage/storageProviderFactory";
 // tslint:disable-next-line: no-var-requires
 require("dotenv").config();
 
@@ -71,13 +72,11 @@ export function fetchAzureContainerConnections(): (dispatch: Dispatch) => Promis
         const environment = process.env;
         const accountName = environment.REACT_APP_ACCOUNT_NAME;
         const sas = environment.REACT_APP_SAS;
-        const azureStorage = new AzureBlobStorage({
+        const storage = StorageProviderFactory.create("azureBlobStorage", {
             accountName,
             sas,
-            createContainer: false,
-            containerName: "",
         });
-        const containers = await azureStorage.listContainers(null);
+        const containers = await storage.listContainers(null);
         const connections = containers.map((container) => {
             const connection = {
                 description: undefined,
