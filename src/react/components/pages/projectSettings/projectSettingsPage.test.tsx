@@ -171,28 +171,6 @@ describe("Project settings page", () => {
             wrapper = createComponent(store, props);
         }
 
-        it("Loads partial project from local storage", () => {
-            const partialProject: IProject = {
-                ...{} as any,
-                name: "partial project",
-                description: "partial project description",
-                tags: [
-                    { name: "tag-1", color: "#ff0000" },
-                    { name: "tag-3", color: "#ffff00" },
-                ],
-            };
-
-            localStorageMock.getItem.mockImplementationOnce(() => JSON.stringify(partialProject));
-
-            initPersistProjectFormTest();
-            const projectSettingsPage = wrapper
-                .find(ProjectSettingsPage)
-                .childAt(0) as ReactWrapper<IProjectSettingsPageProps, IProjectSettingsPageState>;
-
-            expect(localStorage.getItem).toBeCalledWith("projectForm");
-            expect(projectSettingsPage.state().project).toEqual(partialProject);
-        });
-
         it("Stores partial project in local storage", () => {
             initPersistProjectFormTest();
             const partialProject: IProject = {

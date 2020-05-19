@@ -1,20 +1,20 @@
 import React from "react";
-import CSVReader, { CSVReaderProps, IFileInfo } from "react-csv-reader"
+import CSVReader, { CSVReaderProps, IFileInfo } from "react-csv-reader";
 import Form, { FormValidation, ISubmitEvent, IChangeEvent, Widget } from "react-jsonschema-form";
 import { TagEditorModal, TagsInput } from "vott-react";
 import { addLocValues, strings } from "../../../../common/strings";
-import { IConnection, IProject, ITag, IAppSettings, AppError, ErrorCode, IUIProject } from "../../../../models/applicationState";
+import { IConnection, IProject, ITag, IAppSettings, IUIProject } from "../../../../models/applicationState";
 import { ConnectionPickerWithRouter } from "../../common/connectionPicker/connectionPicker";
 import { CustomField } from "../../common/customField/customField";
 import CustomFieldTemplate from "../../common/customField/customFieldTemplate";
 import "vott-react/dist/css/tagsInput.css";
 import { IConnectionProviderPickerProps } from "../../common/connectionProviderPicker/connectionProviderPicker";
-import { tagColors } from "./tagColors"
+import { tagColors } from "./tagColors";
 // tslint:disable-next-line:no-var-requires
 const formSchema = addLocValues(require("./projectForm.json"));
 // tslint:disable-next-line:no-var-requires
 const uiSchema = addLocValues(require("./projectForm.ui.json"));
-  
+
 /**
  * Required properties for Project Settings form
  * @member project - Current project to fill form
@@ -52,35 +52,35 @@ export interface IProjectFormState {
 export default class ProjectForm extends React.Component<IProjectFormProps, IProjectFormState> {
     private tagsInput: React.RefObject<TagsInput>;
     private tagEditorModal: React.RefObject<TagEditorModal>;
-    private currentColorIndex: number = 0
+    private currentColorIndex: number = 0;
     private project: IProject = {
         videoSettings: {
-            frameExtractionRate: 15
-        }
-    } as IProject
+            frameExtractionRate: 15,
+        },
+    } as IProject;
     private papaparseOptions = {
         header: false,
         skipEmptyLines: true,
-      }
+      };
 
     constructor(props, context) {
         super(props, context);
-        var formData = null;
+        let formData = null;
         if (props.project) {
-            this.project = props.project
+            this.project = props.project;
             formData = {
                 name: this.props.project.name,
                 connection: this.props.project.sourceConnection,
                 securityToken: this.props.project.securityToken,
-                tags: this.props.project.tags
+                tags: this.props.project.tags,
             };
         }
-        this.project.securityToken = this.props.appSettings.securityTokens[0].key
+        this.project.securityToken = this.props.appSettings.securityTokens[0].key;
         this.state = {
             classNames: ["needs-validation"],
             uiSchema: { ...uiSchema },
             formSchema: { ...formSchema },
-            formData: formData,
+            formData,
         };
         this.tagsInput = React.createRef<TagsInput>();
         this.tagEditorModal = React.createRef<TagEditorModal>();
@@ -97,11 +97,11 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
     public componentDidUpdate(prevProps: IProjectFormProps) {
         if (prevProps.project !== this.props.project) {
             this.setState({
-                formData: { 
+                formData: {
                     name: this.props.project.name,
                     connection: this.props.project.sourceConnection,
                     securityToken: this.props.project.securityToken,
-                    tags: this.props.project.tags
+                    tags: this.props.project.tags,
                  },
             });
         }
@@ -153,44 +153,44 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
             }),
             tags: CustomField<CSVReaderProps>(CSVReader, (props) => {
                 return {
-                    onFileLoaded: (data: Array<any>, fileInfo: IFileInfo) => {
-                        var tags = []
-                        var tagNames = [] 
-                        data.forEach(element => {
-                            const name = element.join(" ")
-                            if (tagNames.indexOf(name) == -1) {
+                    onFileLoaded: (data: any[], fileInfo: IFileInfo) => {
+                        const tags = [];
+                        const tagNames = [];
+                        data.forEach((element) => {
+                            const name = element.join(" ");
+                            if (tagNames.indexOf(name) === -1) {
                                 tags.push({
-                                    name: name,
-                                    color: this.fetchNextColor()
-                                })
-                                tagNames.push(name)
+                                    name,
+                                    color: this.fetchNextColor(),
+                                });
+                                tagNames.push(name);
                             }
-                           
+
                         });
-                        props.onChange(tags)
+                        props.onChange(tags);
                     },
                     parserOptions: this.papaparseOptions,
                     label: this.getTagLabel(props),
                     id: props.idSchema.$id,
-                    value: props.formData
+                    value: props.formData,
                 };
 
-            })
+            }),
         };
     }
 
     private getTagLabel(props) {
-        if (props.formData == undefined) {
-            return strings.projectSettings.tagUpload.noTagsImportedYet
+        if (props.formData === undefined) {
+            return strings.projectSettings.tagUpload.noTagsImportedYet;
         } else {
-            return strings.projectSettings.tagUpload.tagsAlreadyImported
+            return strings.projectSettings.tagUpload.tagsAlreadyImported;
         }
     }
     private fetchNextColor(): string {
-        const keys = Object.keys(tagColors)
-        const chosenColor = tagColors[keys[this.currentColorIndex]]
-        this.currentColorIndex = (this.currentColorIndex + 1) % keys.length
-        return chosenColor
+        const keys = Object.keys(tagColors);
+        const chosenColor = tagColors[keys[this.currentColorIndex]];
+        this.currentColorIndex = (this.currentColorIndex + 1) % keys.length;
+        return chosenColor;
     }
 
     private onTagShiftClick(tag: ITag) {
@@ -221,7 +221,7 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
             const uiProject: IUIProject = {
                 ...changeEvent.formData,
             };
-            this.setProject(uiProject)
+            this.setProject(uiProject);
             this.props.onChange(this.project);
         }
     }
@@ -230,16 +230,16 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         const uiProject: IUIProject = {
             ...args.formData,
         };
-        this.setProject(uiProject)
+        this.setProject(uiProject);
         this.props.onSubmit(this.project);
     }
 
     private setProject(uiProject: IUIProject) {
-        this.project.name = uiProject.connection.name
-        this.project.securityToken = uiProject.securityToken
-        this.project.sourceConnection = uiProject.connection
-        this.project.targetConnection = uiProject.connection
-        this.project.tags = uiProject.tags
+        this.project.name = uiProject.connection.name;
+        this.project.securityToken = uiProject.securityToken;
+        this.project.sourceConnection = uiProject.connection;
+        this.project.targetConnection = uiProject.connection;
+        this.project.tags = uiProject.tags;
     }
 
     private onFormCancel() {

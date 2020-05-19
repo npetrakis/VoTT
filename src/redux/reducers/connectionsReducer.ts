@@ -23,12 +23,12 @@ export const reducer = (state: IConnection[] = [], action: AnyAction): IConnecti
                 ...state.filter((connection) => connection.id !== action.payload.id),
             ];
         case ActionTypes.SAVE_CONNECTIONS_SUCCESS:
-            const connectionIds = action.payload.map(connection => {
-                return connection.id
-            })
+            const connectionIds = action.payload.map((connection) => {
+                return connection.id;
+            });
             return [
                 ...action.payload,
-                ...state.filter((connection) => connectionIds.indexOf(connection.id) == -1),
+                ...state.filter((connection) => connectionIds.indexOf(connection.id) === -1),
             ];
         case ActionTypes.DELETE_CONNECTION_SUCCESS:
             return [...state.filter((connection) => connection.id !== action.payload.id)];

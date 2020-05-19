@@ -50,7 +50,7 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(projectActions, dispatch),
         applicationActions: bindActionCreators(applicationActions, dispatch),
-        connectionActions: bindActionCreators(connectionActions, dispatch)
+        connectionActions: bindActionCreators(connectionActions, dispatch),
     };
 }
 
@@ -65,9 +65,9 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
     private importConfirm: React.RefObject<Confirm> = React.createRef();
 
     public componentDidMount() {
-        this.props.connectionActions.fetchAzureContainerConnections().then( connections => {
-            console.log("SUCCESS")
-        })
+        this.props.connectionActions.fetchAzureContainerConnections().then( (connections) => {
+            console.log("SUCCESS");
+        });
     }
 
     public render() {
@@ -81,7 +81,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                                 <h6>{strings.homePage.newProject}</h6>
                             </a>
                         </li>
-                        {isElectron() &&
+                        {/* {isElectron() &&
                             <li>
                                 <a href="#" className="p-5 file-upload"
                                     onClick={() => this.filePicker.current.upload()} >
@@ -92,7 +92,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                                     onChange={this.onProjectFileUpload}
                                     onError={this.onProjectFileUploadError} />
                             </li>
-                        }
+                        } */}
                         <li>
                             {/*Open Cloud Project*/}
                             <a href="#" onClick={this.handleOpenCloudProjectClick} className="p-5 cloud-open-project">

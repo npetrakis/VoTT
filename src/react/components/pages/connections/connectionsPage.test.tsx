@@ -9,7 +9,7 @@ import { IApplicationState, IConnection } from "../../../../models/applicationSt
 import { AssetProviderFactory } from "../../../../providers/storage/assetProviderFactory";
 import { IAzureCloudStorageOptions } from "../../../../providers/storage/azureBlobStorage";
 import IConnectionActions, * as connectionActions from "../../../../redux/actions/connectionActions";
-import initialState from "../../../../redux/store/initialState";
+import getInitialState from "../../../../redux/store/initialState";
 import createReduxStore from "../../../../redux/store/store";
 import registerProviders from "../../../../registerProviders";
 import CondensedList from "../../common/condensedList/condensedList";
@@ -89,7 +89,7 @@ describe("Connections Page", () => {
 
         it("renders connections in the list correctly", () => {
             const props = createProps(connectionsRoute);
-            const state = { ...initialState };
+            const state = { ...getInitialState() };
             state.connections = MockFactory.createTestConnections(8);
             const store = createStore(state);
             const wrapper = createWrapper(connectionsRoute, store, props);
@@ -180,7 +180,7 @@ describe("Connections Page", () => {
     describe("selecting connections", () => {
         it("renders no form when nothing is selected", () => {
             const props = createProps(connectionsRoute);
-            const state = { ...initialState };
+            const state = { ...getInitialState() };
             state.connections = MockFactory.createTestConnections(2);
 
             const store = createStore(state);
@@ -194,7 +194,7 @@ describe("Connections Page", () => {
 
         it("contains connection specific links for their id /connections/:connectionId", () => {
             const props = createProps(connectionsRoute);
-            const state = { ...initialState };
+            const state = { ...getInitialState() };
             state.connections = MockFactory.createTestConnections(2);
 
             const store = createStore(state);
@@ -212,7 +212,7 @@ describe("Connections Page", () => {
             const props = createProps(route);
             props.match.params = { connectionId: "connection-3" };
 
-            const state = { ...initialState };
+            const state = { ...getInitialState() };
             state.connections = MockFactory.createTestConnections(4);
 
             const store = createStore(state);
@@ -231,7 +231,7 @@ describe("Connections Page", () => {
             const props = createProps(connectionsRoute);
             const deleteConnection = jest.spyOn(props.actions, "deleteConnection");
 
-            const state = { ...initialState };
+            const state = { ...getInitialState() };
             state.connections = MockFactory.createTestConnections(2);
 
             const store = createStore(state);
@@ -258,7 +258,7 @@ describe("Connections Page", () => {
             props.match.params = { connectionId: "connection-1" };
             const historyPushSpy = jest.spyOn(props.history, "push");
 
-            const state = { ...initialState };
+            const state = { ...getInitialState() };
             state.connections = MockFactory.createTestConnections(2);
 
             const store = createStore(state);

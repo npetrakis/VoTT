@@ -101,7 +101,7 @@ export const korean: IAppStrings = {
             frameExtractionRate: "프레임 추출 속도 (비디오 초당 프레임)",  // Frame Extraction Rate (frames per a video second)
         },
         addConnection: "연결 추가", // Add Connection,
-        tagUpload: { //TODO: Add Localizations
+        tagUpload: { // TODO: Add Localizations
             noTagsImportedYet: "Upload the CSV file with your tags",
             tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
         },

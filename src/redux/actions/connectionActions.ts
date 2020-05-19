@@ -6,7 +6,8 @@ import { Dispatch } from "redux";
 import ConnectionService from "../../services/connectionService";
 import { IAzureCloudStorageOptions, AzureBlobStorage } from "../../providers/storage/azureBlobStorage";
 import { connect } from "net";
-require('dotenv').config();
+// tslint:disable-next-line: no-var-requires
+require("dotenv").config();
 
 /**
  * Actions to be performed in relation to connections
@@ -14,8 +15,8 @@ require('dotenv').config();
 export default interface IConnectionActions {
     loadConnection(connection: IConnection): Promise<IConnection>;
     saveConnection(connection: IConnection): Promise<IConnection>;
-    saveConnections(connections: IConnection[]): Promise<IConnection[]>
-    fetchAzureContainerConnections()
+    saveConnections(connections: IConnection[]): Promise<IConnection[]>;
+    fetchAzureContainerConnections();
     deleteConnection(connection: IConnection): Promise<void>;
 }
 
@@ -49,16 +50,16 @@ export function saveConnection(connection: IConnection): (dispatch: Dispatch) =>
  */
 export function saveConnections(connections: IConnection[]): (dispatch: Dispatch) => Promise<IConnection[]> {
     return async (dispatch: Dispatch) => {
-        saveConnectionsToService(connections, dispatch)
+        saveConnectionsToService(connections, dispatch);
         return Promise.resolve(connections);
     };
 }
 
 function saveConnectionsToService(connections: IConnection[], dispatch): void {
     const connectionService = new ConnectionService();
-    connections.forEach(async connection => {
+    connections.forEach(async (connection) => {
         await connectionService.save(connection);
-    })
+    });
     dispatch(saveConnectionsAction(connections));
 }
 /**
@@ -71,30 +72,30 @@ export function fetchAzureContainerConnections(): (dispatch: Dispatch) => Promis
         const accountName = environment.REACT_APP_ACCOUNT_NAME;
         const sas = environment.REACT_APP_SAS;
         const azureStorage = new AzureBlobStorage({
-            accountName: accountName,
-            sas: sas,
+            accountName,
+            sas,
             createContainer: false,
-            containerName: ""
+            containerName: "",
         });
         const containers = await azureStorage.listContainers(null);
-        const connections = containers.map(container => {
+        const connections = containers.map((container) => {
             const connection = {
                 description: undefined,
                 id: container,
-                name: container, 
+                name: container,
                 providerType: "azureBlobStorage",
                 providerOptions: {
-                    accountName: accountName,
+                    accountName,
                     containerName: container,
                     createContainer: false,
-                    sas: sas
-                }
-            }
-            return connection
+                    sas,
+                },
+            };
+            return connection;
         });
-        saveConnectionsToService(connections, dispatch)
+        saveConnectionsToService(connections, dispatch);
         return Promise.resolve(connections);
-    }
+    };
 }
 
 /**

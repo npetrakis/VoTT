@@ -2,7 +2,7 @@ import React from "react";
 import App from "./App";
 import { Provider } from "react-redux";
 import createReduxStore from "./redux/store/store";
-import initialState from "./redux/store/initialState";
+import getInitialState from "./redux/store/initialState";
 import { IApplicationState } from "./models//applicationState";
 import { mount } from "enzyme";
 import { Router } from "react-router-dom";
@@ -10,7 +10,7 @@ import { KeyboardManager } from "./react/components/common/keyboardManager/keybo
 import { ErrorHandler } from "./react/components/common/errorHandler/errorHandler";
 
 describe("App Component", () => {
-    const defaultState: IApplicationState = initialState;
+    const defaultState: IApplicationState = getInitialState();
     const store = createReduxStore(defaultState);
     const electronMock = {
         ipcRenderer: {

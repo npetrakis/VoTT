@@ -6,7 +6,7 @@ import { IpcRendererProxy } from "../../common/ipcRendererProxy";
 import { IAppSettings } from "../../models/applicationState";
 import { IApplicationState } from "../../models/applicationState";
 import MockFactory from "../../common/mockFactory";
-import initialState from "../store/initialState";
+import getInitialState from "../store/initialState";
 
 describe("Application Redux Actions", () => {
     let store: MockStoreEnhanced<IApplicationState>;
@@ -16,7 +16,7 @@ describe("Application Redux Actions", () => {
         IpcRendererProxy.send = jest.fn(() => Promise.resolve());
         const middleware = [thunk];
         const mockState: IApplicationState = {
-            ...initialState,
+            ...getInitialState(),
             appSettings,
         };
         store = createMockStore<IApplicationState>(middleware)(mockState);
@@ -81,7 +81,7 @@ describe("Application Redux Actions", () => {
         };
         const middleware = [thunk];
         const mockState: IApplicationState = {
-            ...initialState,
+            ...getInitialState(),
             appSettings,
         };
 

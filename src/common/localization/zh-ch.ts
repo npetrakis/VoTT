@@ -101,7 +101,7 @@ export const chinese: IAppStrings = {
             frameExtractionRate: "帧提取率（每视频每秒的帧数）", // Frame Extraction Rate (frames per a video second)
         },
         addConnection: "添加连接", // Add Connection
-        tagUpload: { //TODO: Add Localizations
+        tagUpload: { // TODO: Add Localizations
             noTagsImportedYet: "Upload the CSV file with your tags",
             tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
         },

@@ -1,5 +1,6 @@
 import { IApplicationState } from "../../models/applicationState";
-require('dotenv').config();
+// tslint:disable-next-line: no-var-requires
+require("dotenv").config();
 
 /**
  * Initial state of application
@@ -8,7 +9,6 @@ require('dotenv').config();
  * @member recentProjects - Recent projects
  * @member currentProject - Current project
  */
-
 
 const initialState: IApplicationState = {
     appSettings: {
@@ -22,12 +22,12 @@ const initialState: IApplicationState = {
 };
 
 export default function getInitialState(): IApplicationState {
-    var state = initialState;
+    const state = initialState;
     state.appSettings.securityTokens.push(
         {
             name: process.env.REACT_APP_SECURITY_TOKEN_NAME,
-            key: process.env.REACT_APP_SECURITY_TOKEN_KEY
-        }
+            key: process.env.REACT_APP_SECURITY_TOKEN_KEY,
+        },
     );
     return state;
 }

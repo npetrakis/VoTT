@@ -13,7 +13,7 @@ import { AssetService } from "../../services/assetService";
 import { ExportProviderFactory } from "../../providers/export/exportProviderFactory";
 import { IExportProvider } from "../../providers/export/exportProvider";
 import { IApplicationState, IProject } from "../../models/applicationState";
-import initialState from "../store/initialState";
+import getInitialState from "../store/initialState";
 import { appInfo } from "../../common/appInfo";
 import registerMixins from "../../registerMixins";
 
@@ -27,7 +27,7 @@ describe("Project Redux Actions", () => {
     beforeEach(() => {
         const middleware = [thunk];
         const mockState: IApplicationState = {
-            ...initialState,
+            ...getInitialState(),
             appSettings,
         };
 
@@ -235,7 +235,7 @@ describe("Project Redux Actions", () => {
             project = MockFactory.createTestProject("TestProject");
             const middleware = [thunk];
             const mockState: IApplicationState = {
-                ...initialState,
+                ...getInitialState(),
                 currentProject: project,
                 appSettings,
             };

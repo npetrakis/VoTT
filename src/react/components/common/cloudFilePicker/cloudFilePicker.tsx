@@ -62,8 +62,11 @@ export class CloudFilePicker extends React.Component<ICloudFilePickerProps, IClo
         this.state = this.getInitialState(props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.state = this.getInitialState(nextProps);
+    public componentWillReceiveProps(nextProps) {
+        this.setState( {
+                ...this.getInitialState(nextProps),
+            },
+        );
     }
 
     public render() {

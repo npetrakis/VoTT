@@ -41,5 +41,5 @@ export const tagColors = {
     red: "#ff0000",
     silver: "#c0c0c0",
     white: "#ffffff",
-    yellow: "#ffff00"
+    yellow: "#ffff00",
 };

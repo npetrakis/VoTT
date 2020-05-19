@@ -840,7 +840,7 @@ export default class MockFactory {
             saveConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             deleteConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             saveConnections: jest.fn((connections: IConnection[]) => Promise.resolve()),
-            fetchAzureContainerConnections: jest.fn(() => Promise.resolve())
+            fetchAzureContainerConnections: jest.fn(() => Promise.resolve()),
         };
     }
 

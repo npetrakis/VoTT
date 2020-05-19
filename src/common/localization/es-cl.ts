@@ -100,7 +100,7 @@ export const spanish: IAppStrings = {
             frameExtractionRate: "Tasa de extracción de cuadros (cuadros por segundo de video)",
         },
         addConnection: "Agregar Conexión",
-        tagUpload: { //TODO: Add Localizations
+        tagUpload: { // TODO: Add Localizations
             noTagsImportedYet: "Upload the CSV file with your tags",
             tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
         },
