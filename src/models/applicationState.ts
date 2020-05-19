@@ -121,8 +121,6 @@ export interface IProject {
 }
 
 export interface IUIProject {
-    name: string;
-    securityToken: string;
     tags: ITag[];
     connection: IConnection;
 }

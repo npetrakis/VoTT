@@ -69,13 +69,11 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         if (props.project) {
             this.project = props.project;
             formData = {
-                name: this.props.project.name,
                 connection: this.props.project.sourceConnection,
-                securityToken: this.props.project.securityToken,
                 tags: this.props.project.tags,
             };
         }
-        this.project.securityToken = this.props.appSettings.securityTokens[0].key;
+        this.project.securityToken = this.props.appSettings.securityTokens[0].name;
         this.state = {
             classNames: ["needs-validation"],
             uiSchema: { ...uiSchema },
@@ -98,9 +96,7 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         if (prevProps.project !== this.props.project) {
             this.setState({
                 formData: {
-                    name: this.props.project.name,
                     connection: this.props.project.sourceConnection,
-                    securityToken: this.props.project.securityToken,
                     tags: this.props.project.tags,
                  },
             });
@@ -236,7 +232,6 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
 
     private setProject(uiProject: IUIProject) {
         this.project.name = uiProject.connection.name;
-        this.project.securityToken = uiProject.securityToken;
         this.project.sourceConnection = uiProject.connection;
         this.project.targetConnection = uiProject.connection;
         this.project.tags = uiProject.tags;

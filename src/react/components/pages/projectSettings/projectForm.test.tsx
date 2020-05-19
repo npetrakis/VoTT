@@ -2,13 +2,10 @@ import { mount, ReactWrapper } from "enzyme";
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import MockFactory from "../../../../common/mockFactory";
-import { KeyCodes } from "../../../../common/utils";
 import registerProviders from "../../../../registerProviders";
 import ProjectForm, { IProjectFormProps, IProjectFormState } from "./projectForm";
 import { IProjectVideoSettings } from "../../../../models/applicationState";
-import { SecurityTokenPicker } from "../../common/securityTokenPicker/securityTokenPicker";
 import { ConnectionPickerWithRouter } from "../../common/connectionPicker/connectionPicker";
-import { TagsInput } from "vott-react";
 
 describe("Project Form Component", () => {
     const project = MockFactory.createTestProject("TestProject");
@@ -54,7 +51,6 @@ describe("Project Form Component", () => {
 
         it("starting project has initial state loaded correctly", () => {
             const formData = wrapper.state().formData;
-            expect(formData.name).toEqual(project.name);
             expect(formData.connection).toEqual(project.sourceConnection);
             expect(formData.connection).toEqual(project.targetConnection);
             expect(project.tags.length).toBeGreaterThan(0);
@@ -93,8 +89,6 @@ describe("Project Form Component", () => {
         });
         it("Has initial state loaded correctly", () => {
             const formData = wrapper.state().formData;
-            const defaultVideoSettings: IProjectVideoSettings = { frameExtractionRate: 15 };
-            expect(formData.name).toBe(undefined);
             expect(formData.connection).toEqual({});
             expect(formData.tags).toBe(undefined);
         });
