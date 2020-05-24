@@ -3,6 +3,7 @@ import { AutoSizer, List } from "react-virtualized";
 import { IAsset, AssetState, ISize } from "../../../../models/applicationState";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { strings } from "../../../../common/strings";
+import "./editorSideBar.scss";
 
 /**
  * Properties for Editor Side Bar
