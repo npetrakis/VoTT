@@ -15,7 +15,7 @@ import RecentProjectItem from "./recentProjectItem";
 import { constants } from "../../../../common/constants";
 import {
     IApplicationState, IConnection, IProject, IFileInfo,
-    ErrorCode, AppError, IAppError, IAppSettings, IAsset,
+    ErrorCode, AppError, IAppError, IAppSettings, IAsset, ProjectStatus,
 } from "../../../../models/applicationState";
 import ImportService from "../../../../services/importService";
 import { IAssetMetadata } from "../../../../models/applicationState";
@@ -30,6 +30,7 @@ export interface IHomePageProps extends RouteComponentProps, React.Props<HomePag
     applicationActions: IApplicationActions;
     appSettings: IAppSettings;
     connectionActions: IConnectionActions;
+    projectActions: IProjectActions;
     project: IProject;
 }
 
@@ -51,6 +52,7 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(projectActions, dispatch),
         applicationActions: bindActionCreators(applicationActions, dispatch),
         connectionActions: bindActionCreators(connectionActions, dispatch),
+        projectActions: bindActionCreators(projectActions, dispatch),
     };
 }
 
@@ -59,14 +61,13 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
     public state: IHomePageState = {
         cloudPickerOpen: false,
     };
-    private filePicker: React.RefObject<FilePicker> = React.createRef();
     private deleteConfirm: React.RefObject<Confirm> = React.createRef();
     private cloudFilePicker: React.RefObject<CloudFilePicker> = React.createRef();
     private importConfirm: React.RefObject<Confirm> = React.createRef();
 
     public componentDidMount() {
         this.props.connectionActions.fetchAzureContainerConnections().then( (connections) => {
-            console.log("SUCCESS");
+            this.props.projectActions.fetchProjectStatuses();
         });
     }
 
@@ -101,7 +102,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                             </a>
                             <CloudFilePicker
                                 ref={this.cloudFilePicker}
-                                connections={this.props.connections}
+                                connections={this.props.connections.filter((connection) => connection.status)}
                                 onSubmit={(content) => this.loadSelectedProject(JSON.parse(content))}
                                 fileExtension={constants.projectFileExtension}
                             />

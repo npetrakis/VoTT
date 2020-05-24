@@ -1,5 +1,5 @@
 import shortid from "shortid";
-import { IConnection } from "../../models/applicationState";
+import { IConnection, ProjectStatus } from "../../models/applicationState";
 import { ActionTypes } from "./actionTypes";
 import { IPayloadAction, createPayloadAction } from "./actionCreators";
 import { Dispatch } from "redux";
@@ -65,7 +65,6 @@ function saveConnectionsToService(connections: IConnection[], dispatch): void {
 }
 /**
  * Dispatches Fetch Connections For  Azure Containers action and resolves with IConnection[]
- * @param azureStorageAccountOptions - Properties to connect to  storage account
  */
 export function fetchAzureContainerConnections(): (dispatch: Dispatch) => Promise<IConnection[]> {
     return async (dispatch: Dispatch) => {
@@ -135,6 +134,14 @@ export interface IDeleteConnectionAction extends IPayloadAction<string, IConnect
 export interface ISaveConnectionsAction extends IPayloadAction<string, IConnection[]> {
     type: ActionTypes.SAVE_CONNECTIONS_SUCCESS;
 }
+
+/**
+ * Fetch statuses of projects
+ */
+export interface IFetchConnectionProjectStatusesAction extends IPayloadAction<string, any> {
+    type: ActionTypes.FETCH_CONNECTION_PROJECT_STATUSES_SUCCESS;
+}
+
 /**
  * Instance of load connection action
  */
@@ -152,3 +159,9 @@ export const deleteConnectionAction =
  * Instance of save connection action
  */
 export const saveConnectionsAction = createPayloadAction<ISaveConnectionsAction>(ActionTypes.SAVE_CONNECTIONS_SUCCESS);
+
+/**
+ * Instance of Fetch Project Statuses action
+ */
+export const fetchConnectionProjectStatusesAction =
+createPayloadAction<IFetchConnectionProjectStatusesAction>(ActionTypes.FETCH_CONNECTION_PROJECT_STATUSES_SUCCESS);

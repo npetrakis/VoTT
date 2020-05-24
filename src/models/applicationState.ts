@@ -166,12 +166,19 @@ export enum StorageType {
  * @member providerType - The underlying storage type (Local File System, Azure Blob Storage, etc)
  * @member providerOptions - Provider specific options used to connect to the data source
  */
+
+export enum ProjectStatus {
+    INPROGRESS = "INPROGRESS",
+    FINISHED = "FINISHED",
+}
+
 export interface IConnection {
     id: string;
     name: string;
     description?: string;
     providerType: string;
     providerOptions: IProviderOptions | ISecureString;
+    status?: string;
 }
 
 /**

@@ -127,7 +127,6 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
                 <TagEditorModal
                     ref={this.tagEditorModal}
                     onOk={this.onTagModalOk}
-
                     tagNameText={strings.tags.modal.name}
                     tagColorText={strings.tags.modal.color}
                     saveText={strings.common.save}
@@ -143,7 +142,8 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
                 return {
                     id: props.idSchema.$id,
                     value: props.formData,
-                    connections: this.props.connections,
+                    connections: this.props.connections.filter((connection) =>
+                        !connection.status && connection.name.includes("data")),
                     onChange: props.onChange,
                 };
             }),

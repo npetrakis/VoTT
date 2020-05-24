@@ -1,4 +1,5 @@
 import { Action, Dispatch } from "redux";
+import { IConnection, ProjectStatus, AssetState } from "../../models/applicationState";
 import ProjectService from "../../services/projectService";
 import { ActionTypes } from "./actionTypes";
 import { AssetService } from "../../services/assetService";
@@ -12,11 +13,11 @@ import {
     IProject,
 } from "../../models/applicationState";
 import { createAction, createPayloadAction, IPayloadAction } from "./actionCreators";
-import { ExportAssetState, IExportResults } from "../../providers/export/exportProvider";
+import { IExportResults } from "../../providers/export/exportProvider";
 import { appInfo } from "../../common/appInfo";
 import { strings } from "../../common/strings";
-import { IExportFormat } from "vott-react";
-import { IVottJsonExportProviderOptions } from "../../providers/export/vottJson";
+import { StorageProviderFactory } from "../../providers/storage/storageProviderFactory";
+import { fetchConnectionProjectStatusesAction, saveConnection } from "./connectionActions";
 
 /**
  * Actions to be performed in relation to projects
@@ -32,7 +33,12 @@ export default interface IProjectActions {
     saveAssetMetadata(project: IProject, assetMetadata: IAssetMetadata): Promise<IAssetMetadata>;
     updateProjectTag(project: IProject, oldTagName: string, newTagName: string): Promise<IAssetMetadata[]>;
     deleteProjectTag(project: IProject, tagName): Promise<IAssetMetadata[]>;
+    fetchProjectStatuses();
+    saveProjectStatus();
 }
+
+const accountName = process.env.REACT_APP_ACCOUNT_NAME;
+const sas = process.env.REACT_APP_SAS;
 
 /**
  * Dispatches Load Project action and resolves with IProject
@@ -82,12 +88,29 @@ export function saveProject(project: IProject)
 
         const savedProject = await projectService.save(project, projectToken);
         dispatch(saveProjectAction(savedProject));
-
         // Reload project after save actions
         await loadProject(savedProject)(dispatch, getState);
 
+        const projectStatus = await getProjectStatus(project);
+        if (projectStatus !== project.targetConnection.status) {
+            project.targetConnection.status = projectStatus;
+            saveProjectStatus(project.targetConnection)(dispatch, getState);
+        }
         return savedProject;
     };
+}
+
+async function getProjectStatus(project: IProject): Promise<string> {
+    const storage = StorageProviderFactory.createFromConnection(project.sourceConnection);
+    const numberOfAssets = await storage.listFiles(project.sourceConnection.name, "jpg");
+    const taggedAssets = Object.keys(project.assets)
+        .map((assetKey) => project.assets[assetKey])
+        .filter((asset) => asset.state === AssetState.Tagged);
+    if (taggedAssets.length === numberOfAssets.length) {
+        return ProjectStatus.FINISHED;
+    } else {
+        return ProjectStatus.INPROGRESS;
+    }
 }
 
 /**
@@ -257,6 +280,54 @@ export function exportProject(project: IProject): (dispatch: Dispatch) => Promis
             return results as IExportResults;
         }
     };
+}
+
+/**
+ * Fetch Project Statuses
+ */
+export function fetchProjectStatuses():
+(dispatch: Dispatch) => Promise<void> | Promise<any> {
+    return async (dispatch: Dispatch) => {
+        const storage = StorageProviderFactory.create("azureBlobStorage", {
+            accountName,
+            sas,
+            containerName: "status",
+            createContainer: false,
+        });
+        storage.initialize();
+        const statuses = JSON.parse(await storage.readText("projectStatus.json"));
+        dispatch(fetchConnectionProjectStatusesAction(statuses));
+        return Promise.resolve(statuses);
+    };
+}
+
+export function saveProjectStatus(connection: IConnection):
+(dispatch: Dispatch, getState: () => IApplicationState) => Promise<void> {
+    return async (dispatch: Dispatch, getState: () => IApplicationState) => {
+        const connections = [
+            { ...connection },
+            ...getState().connections.filter((stateConnection) => stateConnection.id !== connection.id),
+        ];
+        const jsonString = connectionsToStatusJSONString(connections);
+        const storage = StorageProviderFactory.create("azureBlobStorage", {
+            accountName,
+            sas,
+            containerName: "status",
+            createContainer: false,
+        });
+        await storage.writeText("projectStatus.json", jsonString);
+        await saveConnection(connection)(dispatch);
+    };
+}
+
+function connectionsToStatusJSONString(connections: IConnection[]): string {
+    const statusObject = {};
+    connections.forEach((connection) => {
+        if (connection.status) {
+            statusObject[connection.name] = connection.status;
+        }
+    });
+    return JSON.stringify(statusObject, null, 2);
 }
 
 /**

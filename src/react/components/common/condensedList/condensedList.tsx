@@ -1,6 +1,7 @@
 import React, { SyntheticEvent } from "react";
 import "./condensedList.scss";
 import { Link } from "react-router-dom";
+import { ToolbarItemName } from "../../../../registerToolbar";
 
 /**
  * Properties for Condensed List Component
@@ -88,10 +89,14 @@ export default class CondensedList extends React.Component<ICondensedListProps> 
  * @param param0 - {item: {name: ""}, onClick: (item) => void;}
  */
 export function ListItem({ item, onClick }) {
+    let itemTitle = item.name;
+    if (item.status) {
+        itemTitle += " (" + item.status + ")";
+    }
     return (
         <li>
             <a onClick={onClick}>
-                <span className="px-2">{item.name}</span>
+                <span className="px-2">{itemTitle}</span>
             </a>
         </li>
     );

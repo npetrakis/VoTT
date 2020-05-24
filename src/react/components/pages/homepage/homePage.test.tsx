@@ -274,6 +274,7 @@ describe("Homepage Component", () => {
             actions: (projectActions as any) as IProjectActions,
             applicationActions: (applicationActions as any) as IApplicationActions,
             connectionActions: (connectionActions as any) as IConnectionActions,
+            projectActions: (projectActions as any) as IProjectActions,
             appSettings: {
                 devToolsEnabled: false,
                 securityTokens: [],

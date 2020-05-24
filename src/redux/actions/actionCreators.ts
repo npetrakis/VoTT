@@ -10,6 +10,7 @@ import {
     ISaveConnectionAction,
     IDeleteConnectionAction,
     ISaveConnectionsAction,
+    IFetchConnectionProjectStatusesAction,
 } from "./connectionActions";
 import {
     ILoadProjectAction,
@@ -89,4 +90,5 @@ export type AnyAction = IOtherAction |
     ILoadAssetMetadataAction |
     IExportProjectAction |
     IShowAppErrorAction |
-    IClearErrorAction;
+    IClearErrorAction |
+    IFetchConnectionProjectStatusesAction;
