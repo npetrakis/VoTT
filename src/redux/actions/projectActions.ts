@@ -39,7 +39,8 @@ export default interface IProjectActions {
 
 const accountName = process.env.REACT_APP_ACCOUNT_NAME;
 const sas = process.env.REACT_APP_SAS;
-
+const statusContainer = process.env.REACT_APP_STATUS_CONTAINER;
+const statusFile = process.env.REACT_APP_STATUS_FILE;
 /**
  * Dispatches Load Project action and resolves with IProject
  * @param project - Project to load
@@ -291,11 +292,11 @@ export function fetchProjectStatuses():
         const storage = StorageProviderFactory.create("azureBlobStorage", {
             accountName,
             sas,
-            containerName: "status",
+            containerName: statusContainer,
             createContainer: false,
         });
         storage.initialize();
-        const statuses = JSON.parse(await storage.readText("projectStatus.json"));
+        const statuses = JSON.parse(await storage.readText(statusFile));
         dispatch(fetchConnectionProjectStatusesAction(statuses));
         return Promise.resolve(statuses);
     };
@@ -312,10 +313,10 @@ export function saveProjectStatus(connection: IConnection):
         const storage = StorageProviderFactory.create("azureBlobStorage", {
             accountName,
             sas,
-            containerName: "status",
+            containerName: statusContainer,
             createContainer: false,
         });
-        await storage.writeText("projectStatus.json", jsonString);
+        await storage.writeText(statusFile, jsonString);
         await saveConnection(connection)(dispatch);
     };
 }
