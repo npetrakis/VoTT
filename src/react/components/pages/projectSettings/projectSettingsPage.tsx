@@ -73,6 +73,8 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
             if (projectToLoad) {
                 await this.props.applicationActions.ensureSecurityToken(projectToLoad);
                 await this.props.projectActions.loadProject(projectToLoad);
+            } else {
+                this.props.history.push(`/`);
             }
         }
     }

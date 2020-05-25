@@ -130,10 +130,15 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             await this.loadProjectAssets();
         } else if (projectId) {
             const project = this.props.recentProjects.find((project) => project.id === projectId);
-            await this.props.actions.loadProject(project);
+            if (project) {
+                await this.props.actions.loadProject(project);
+            } else {
+                this.props.history.push(`/`);
+            }
         }
-
-        this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
+        if (this.props.project) {
+            this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
+        }
     }
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
