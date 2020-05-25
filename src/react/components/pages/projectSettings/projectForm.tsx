@@ -142,8 +142,7 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
                 return {
                     id: props.idSchema.$id,
                     value: props.formData,
-                    connections: this.props.connections.filter((connection) =>
-                        !connection.status && connection.name.includes("data")),
+                    connections: this.fetchConnections(),
                     onChange: props.onChange,
                 };
             }),
@@ -173,6 +172,15 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
 
             }),
         };
+    }
+
+    private fetchConnections() {
+        if (this.props.project) {
+            return [this.project.targetConnection];
+        } else {
+            return this.props.connections.filter((connection) =>
+                !connection.status && connection.name.includes("data"));
+        }
     }
 
     private getTagLabel(props) {
