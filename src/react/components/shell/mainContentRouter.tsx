@@ -18,13 +18,13 @@ export default function MainContentRouter() {
             <Switch>
                 <Route path="/" exact component={HomePage} />
                 {/* <Route path="/settings" component={AppSettingsPage} /> */}
-                <Route path="/connections/:connectionId" component={ConnectionPage} />
-                <Route path="/connections" exact component={ConnectionPage} />
+                {/* <Route path="/connections/:connectionId" component={ConnectionPage} />
+                <Route path="/connections" exact component={ConnectionPage} /> */}
                 <Route path="/projects/:projectId/edit" component={EditorPage} />
                 <Route path="/projects/create" component={ProjectSettingsPage} />
                 <Route path="/projects/:projectId/settings" component={ProjectSettingsPage} />
-                <Route path="/projects/:projectId/export" component={ExportPage} />
-                <Route path="/projects/:projectId/active-learning" component={ActiveLearningPage} />
+                {/* <Route path="/projects/:projectId/export" component={ExportPage} /> */}
+                {/* <Route path="/projects/:projectId/active-learning" component={ActiveLearningPage} /> */}
                 <Route component={HomePage} />
             </Switch>
         </div>
