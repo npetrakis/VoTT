@@ -1,11 +1,9 @@
 import shortid from "shortid";
-import { IConnection, ProjectStatus } from "../../models/applicationState";
+import { IConnection, IApplicationState } from "../../models/applicationState";
 import { ActionTypes } from "./actionTypes";
 import { IPayloadAction, createPayloadAction } from "./actionCreators";
 import { Dispatch } from "redux";
 import ConnectionService from "../../services/connectionService";
-import { IAzureCloudStorageOptions, AzureBlobStorage } from "../../providers/storage/azureBlobStorage";
-import { connect } from "net";
 import { StorageProviderFactory } from "../../providers/storage/storageProviderFactory";
 // tslint:disable-next-line: no-var-requires
 require("dotenv").config();
@@ -17,7 +15,7 @@ export default interface IConnectionActions {
     loadConnection(connection: IConnection): Promise<IConnection>;
     saveConnection(connection: IConnection): Promise<IConnection>;
     saveConnections(connections: IConnection[]): Promise<IConnection[]>;
-    fetchAzureContainerConnections();
+    fetchAzureContainerConnections(sas: string);
     deleteConnection(connection: IConnection): Promise<void>;
 }
 
@@ -66,11 +64,15 @@ function saveConnectionsToService(connections: IConnection[], dispatch): void {
 /**
  * Dispatches Fetch Connections For  Azure Containers action and resolves with IConnection[]
  */
-export function fetchAzureContainerConnections(): (dispatch: Dispatch) => Promise<IConnection[]> {
-    return async (dispatch: Dispatch) => {
+export function fetchAzureContainerConnections(sas: string):
+    (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IConnection[]> {
+    return async (dispatch: Dispatch, getState: () => IApplicationState) => {
+        const oldConnections = getState().connections;
+        oldConnections.forEach((connection) => {
+            dispatch(deleteConnectionAction(connection));
+        });
         const environment = process.env;
         const accountName = environment.REACT_APP_ACCOUNT_NAME;
-        const sas = environment.REACT_APP_SAS;
         const storage = StorageProviderFactory.create("azureBlobStorage", {
             accountName,
             sas,

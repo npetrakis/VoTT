@@ -1,6 +1,6 @@
 import React, { SyntheticEvent } from "react";
 import { connect } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { strings, interpolate } from "../../../../common/strings";
 import IProjectActions, * as projectActions from "../../../../redux/actions/projectActions";
@@ -9,7 +9,6 @@ import IConnectionActions, * as connectionActions from "../../../../redux/action
 import { CloudFilePicker } from "../../common/cloudFilePicker/cloudFilePicker";
 import CondensedList from "../../common/condensedList/condensedList";
 import Confirm from "../../common/confirm/confirm";
-import FilePicker from "../../common/filePicker/filePicker";
 import "./homePage.scss";
 import RecentProjectItem from "./recentProjectItem";
 import { constants } from "../../../../common/constants";
@@ -21,7 +20,10 @@ import ImportService from "../../../../services/importService";
 import { IAssetMetadata } from "../../../../models/applicationState";
 import { toast } from "react-toastify";
 import MessageBox from "../../common/messageBox/messageBox";
-import { isElectron } from "../../../../common/hostProcess";
+import Button from "reactstrap/lib/Button";
+import { ProtectedInput } from "../../common/protectedInput/protectedInput";
+// tslint:disable-next-line: no-var-requires
+require("dotenv").config();
 
 export interface IHomePageProps extends RouteComponentProps, React.Props<HomePage> {
     recentProjects: IProject[];
@@ -32,6 +34,7 @@ export interface IHomePageProps extends RouteComponentProps, React.Props<HomePag
     connectionActions: IConnectionActions;
     projectActions: IProjectActions;
     project: IProject;
+    sas?: string;
 }
 
 export interface IHomePageState {
@@ -64,11 +67,23 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
     private deleteConfirm: React.RefObject<Confirm> = React.createRef();
     private cloudFilePicker: React.RefObject<CloudFilePicker> = React.createRef();
     private importConfirm: React.RefObject<Confirm> = React.createRef();
+    private sasInputModal: React.RefObject<MessageBox> = React.createRef();
+    private sasInputField: React.RefObject<ProtectedInput> = React.createRef();
+
+    constructor(props, state) {
+        super(props, state);
+        this.setSAS = this.setSAS.bind(this);
+        this.openSASModal = this.openSASModal.bind(this);
+    }
 
     public componentDidMount() {
-        this.props.connectionActions.fetchAzureContainerConnections().then( (connections) => {
-            this.props.projectActions.fetchProjectStatuses();
-        });
+        if (!this.props.appSettings.sas) {
+            this.openSASModal();
+        } else {
+            this.props.connectionActions.fetchAzureContainerConnections(this.props.appSettings.sas).then( (_) => {
+                this.props.projectActions.fetchProjectStatuses(this.props.appSettings.sas);
+            });
+        }
     }
 
     public render() {
@@ -109,6 +124,10 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                         </li>
                     </ul>
                 </div>
+                <Button className="sasModalButton"
+                    onClick={this.openSASModal}>
+                        Change SAS
+                </Button>
                 {(this.props.recentProjects && this.props.recentProjects.length > 0) &&
                     <div className="app-homepage-recent bg-lighter-1">
                         <CondensedList
@@ -130,8 +149,40 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                         interpolate(strings.homePage.importProject.confirmation, { project })}
                     confirmButtonColor="danger"
                     onConfirm={this.convertProject} />
+                <MessageBox title="Shared Access Signature"
+                    ref={this.sasInputModal}
+                    onCancel={this.setSAS}
+                    message={
+                        <ProtectedInput id="1"
+                        ref={this.sasInputField as any}
+                        value={this.getSAS()} onChange={() => {
+                            console.log("Changed");
+                        }}>Test</ProtectedInput>
+                    }>
+                    <Button autoFocus={true}
+                        color="primary"
+                        onClick={this.setSAS}
+                    > Save
+                    </Button>
+                </MessageBox>
             </div>
         );
+    }
+
+    private getSAS(): string {
+        if (this.props.appSettings.sas) {
+            return this.props.appSettings.sas;
+        } else {
+            return "";
+        }
+    }
+
+    private setSAS() {
+        this.props.applicationActions.saveSAS(this.sasInputField.current.state.value);
+    }
+
+    private openSASModal() {
+        this.sasInputModal.current.open();
     }
 
     private createNewProject = (e: SyntheticEvent) => {

@@ -828,7 +828,7 @@ export default class MockFactory {
             saveAssetMetadata: jest.fn(() => Promise.resolve()),
             updateProjectTag: jest.fn(() => Promise.resolve()),
             deleteProjectTag: jest.fn(() => Promise.resolve()),
-            fetchProjectStatuses: jest.fn(() => Promise.resolve()),
+            fetchProjectStatuses: jest.fn((sas: string) => Promise.resolve()),
             saveProjectStatus: jest.fn(() => Promise.resolve()),
         };
     }
@@ -842,7 +842,7 @@ export default class MockFactory {
             saveConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             deleteConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             saveConnections: jest.fn((connections: IConnection[]) => Promise.resolve()),
-            fetchAzureContainerConnections: jest.fn(() => Promise.resolve()),
+            fetchAzureContainerConnections: jest.fn((sas: string) => Promise.resolve()),
         };
     }
 

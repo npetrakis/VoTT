@@ -19,6 +19,8 @@ export const reducer = (state: IAppSettings = null, action: AnyAction): IAppSett
             return { ...action.payload };
         case ActionTypes.ENSURE_SECURITY_TOKEN_SUCCESS:
             return { ...action.payload };
+        case ActionTypes.SAVE_SAS_SUCCESS:
+            return { ...state, sas: action.payload };
         default:
             return state;
     }

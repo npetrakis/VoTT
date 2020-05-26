@@ -3,6 +3,7 @@ import { IToggleDevToolsAction,
          IRefreshApplicationAction,
          ISaveAppSettingsAction,
          IEnsureSecurityTokenAction,
+         ISaveSASAction,
 } from "./applicationActions";
 import { ActionTypes } from "./actionTypes";
 import {
@@ -91,4 +92,5 @@ export type AnyAction = IOtherAction |
     IExportProjectAction |
     IShowAppErrorAction |
     IClearErrorAction |
+    ISaveSASAction |
     IFetchConnectionProjectStatusesAction;

@@ -87,6 +87,7 @@ export interface IAppSettings {
     devToolsEnabled: boolean;
     securityTokens: ISecurityToken[];
     thumbnailSize?: ISize;
+    sas?: string;
 }
 
 /**

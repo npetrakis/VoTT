@@ -33,12 +33,11 @@ export default interface IProjectActions {
     saveAssetMetadata(project: IProject, assetMetadata: IAssetMetadata): Promise<IAssetMetadata>;
     updateProjectTag(project: IProject, oldTagName: string, newTagName: string): Promise<IAssetMetadata[]>;
     deleteProjectTag(project: IProject, tagName): Promise<IAssetMetadata[]>;
-    fetchProjectStatuses();
-    saveProjectStatus();
+    fetchProjectStatuses(sas: string);
+    saveProjectStatus(connection: IConnection);
 }
 
 const accountName = process.env.REACT_APP_ACCOUNT_NAME;
-const sas = process.env.REACT_APP_SAS;
 const statusContainer = process.env.REACT_APP_STATUS_CONTAINER;
 const statusFile = process.env.REACT_APP_STATUS_FILE;
 /**
@@ -286,7 +285,7 @@ export function exportProject(project: IProject): (dispatch: Dispatch) => Promis
 /**
  * Fetch Project Statuses
  */
-export function fetchProjectStatuses():
+export function fetchProjectStatuses(sas: string):
 (dispatch: Dispatch) => Promise<void> | Promise<any> {
     return async (dispatch: Dispatch) => {
         const storage = StorageProviderFactory.create("azureBlobStorage", {
@@ -310,13 +309,16 @@ export function saveProjectStatus(connection: IConnection):
             ...getState().connections.filter((stateConnection) => stateConnection.id !== connection.id),
         ];
         const jsonString = connectionsToStatusJSONString(connections);
-        const storage = StorageProviderFactory.create("azureBlobStorage", {
-            accountName,
-            sas,
-            containerName: statusContainer,
-            createContainer: false,
-        });
-        await storage.writeText(statusFile, jsonString);
+        const sas = connection.providerOptions["sas"];
+        if (sas) {
+            const storage = StorageProviderFactory.create("azureBlobStorage", {
+                accountName,
+                sas,
+                containerName: statusContainer,
+                createContainer: false,
+            });
+            await storage.writeText(statusFile, jsonString);
+        }
         await saveConnection(connection)(dispatch);
     };
 }

@@ -16,6 +16,7 @@ export default interface IApplicationActions {
     reloadApplication(): Promise<void>;
     saveAppSettings(appSettings: IAppSettings): IAppSettings;
     ensureSecurityToken(project: IProject): IAppSettings;
+    saveSAS(sas: string): Promise<void>;
 }
 
 /**
@@ -86,6 +87,20 @@ export function ensureSecurityToken(project: IProject):
     };
 }
 
+export function saveSAS(sas: string): (dispatch: Dispatch) => Promise<void> {
+    return async (dispatch: Dispatch) => {
+        dispatch(saveSASAction(sas));
+        return Promise.resolve();
+    };
+}
+
+/**
+ * Save SAS Action type
+ */
+export interface ISaveSASAction extends IPayloadAction<string, string> {
+    type: ActionTypes.SAVE_SAS_SUCCESS;
+}
+
 /**
  * Toggle Dev Tools Redux Action type
  */
@@ -113,6 +128,11 @@ export interface ISaveAppSettingsAction extends IPayloadAction<string, IAppSetti
 export interface IEnsureSecurityTokenAction extends IPayloadAction<string, IAppSettings> {
     type: ActionTypes.ENSURE_SECURITY_TOKEN_SUCCESS;
 }
+
+/**
+ * Instance of save SAS action
+ */
+export const saveSASAction = createPayloadAction<ISaveSASAction>(ActionTypes.SAVE_SAS_SUCCESS);
 
 /**
  * Instance of toggle dev tools action
