@@ -103,6 +103,9 @@ export function saveProject(project: IProject)
 async function getProjectStatus(project: IProject): Promise<string> {
     const storage = StorageProviderFactory.createFromConnection(project.sourceConnection);
     const numberOfAssets = await storage.listFiles(project.sourceConnection.name, "jpg");
+    if (!project.assets) {
+        return ProjectStatus.INPROGRESS;
+    }
     const taggedAssets = Object.keys(project.assets)
         .map((assetKey) => project.assets[assetKey])
         .filter((asset) => asset.state === AssetState.Tagged);
