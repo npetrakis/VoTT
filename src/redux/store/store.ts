@@ -10,7 +10,6 @@ import { Env } from "../../common/environment";
 /**
  * Creates initial redux store from initial application state
  * @param initialState - Initial state of application
- * @param useLocalStorage - Whether or not to use localStorage middleware
  */
 export default function createReduxStore(
     initialState?: IApplicationState): Store {

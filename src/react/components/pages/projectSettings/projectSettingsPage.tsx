@@ -61,14 +61,7 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
 
     public async componentDidMount() {
         const projectId = this.props.match.params["projectId"];
-        // If we are creating a new project check to see if there is a partial
-        // project already created in local storage
-        if (this.props.match.url === "/projects/create") {
-            const projectJson = localStorage.getItem(projectFormTempKey);
-            if (projectJson) {
-                this.setState({ project: JSON.parse(projectJson) });
-            }
-        } else if (!this.props.project && projectId) {
+        if (!this.props.project && projectId) {
             const projectToLoad = this.props.recentProjects.find((project) => project.id === projectId);
             if (projectToLoad) {
                 await this.props.applicationActions.ensureSecurityToken(projectToLoad);
@@ -100,7 +93,6 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
                             project={this.state.project}
                             connections={this.props.connections}
                             appSettings={this.props.appSettings}
-                            onChange={this.onFormChange}
                             onSubmit={this.onFormSubmit}
                             onCancel={this.onFormCancel} />
                     </div>
@@ -114,23 +106,11 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
         );
     }
 
-    /**
-     * When the project form is changed verifies if the project contains enough information
-     * to persist into temp local storage to support better new project flow when
-     * creating new connections inline
-     */
-    private onFormChange = (project: IProject) => {
-        if (this.isPartialProject(project)) {
-            localStorage.setItem(projectFormTempKey, JSON.stringify(project));
-        }
-    }
-
     private onFormSubmit = async (project: IProject) => {
         const isNew = !(!!project.id);
 
         await this.props.applicationActions.ensureSecurityToken(project);
         await this.props.projectActions.saveProject(project);
-        localStorage.removeItem(projectFormTempKey);
 
         toast.success(interpolate(strings.projectSettings.messages.saveSuccess, { project }));
 
@@ -142,7 +122,6 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
     }
 
     private onFormCancel = () => {
-        localStorage.removeItem(projectFormTempKey);
         this.props.history.goBack();
     }
 
