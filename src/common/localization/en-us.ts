@@ -28,8 +28,8 @@ export const english: IAppStrings = {
             title: "Open Local Project",
         },
         openCloudProject: {
-            title: "Open Cloud Project",
-            selectConnection: "Select a Connection",
+            title: "Open Project",
+            selectConnection: "Select a Location",
         },
         recentProjects: "Recent Projects",
         deleteProject: {
@@ -86,7 +86,7 @@ export const english: IAppStrings = {
         },
         save: "Save Project",
         sourceConnection: {
-            title: "Source Connection",
+            title: "Location",
             description: "Where to load assets from",
         },
         targetConnection: {
@@ -100,8 +100,8 @@ export const english: IAppStrings = {
         },
         addConnection: "Add Connection",
         tagUpload: {
-            noTagsImportedYet: "Upload the CSV file with your tags",
-            tagsAlreadyImported: "Tags are already imported, you can import new tags by uploading a new CSV file",
+            noTagsImportedYet: "Upload the CSV file with your labels",
+            tagsAlreadyImported: "Labels are already imported, you can import new labels by uploading a new CSV file",
         },
         messages: {
             saveSuccess: "Successfully saved ${project.name} project settings",
@@ -112,21 +112,21 @@ export const english: IAppStrings = {
         assetsSectionTitle: "Assets",
         totalAssetCount: "Total Assets",
         visitedAssets: "Visited Assets (${count})",
-        taggedAssets: "Tagged Assets (${count})",
-        nonTaggedAssets: "Not Tagged Assets (${count})",
+        taggedAssets: "Labelled Assets (${count})",
+        nonTaggedAssets: "Not Labelled Assets (${count})",
         nonVisitedAssets: "Not Visited Assets (${count})",
-        tagsSectionTitle: "Tags & Labels",
-        totalRegionCount: "Total Tagged Regions",
-        totalTagCount: "Total Tags",
-        avgTagCountPerAsset: "Average tags per asset",
+        tagsSectionTitle: "Labels",
+        totalRegionCount: "Total Labelled Regions",
+        totalTagCount: "Total Labels",
+        avgTagCountPerAsset: "Average labels per asset",
     },
     tags: {
-        title: "Tags",
-        placeholder: "Add new tag",
+        title: "Label",
+        placeholder: "Add new Label",
         editor: "Tags Editor",
         modal: {
-            name: "Tag Name",
-            color: "Tag Color",
+            name: "Label Name",
+            color: "Label Color",
         },
         colors: {
             white: "White",
@@ -150,13 +150,13 @@ export const english: IAppStrings = {
             unknownTagName: "Unknown",
         },
         toolbar: {
-            add: "Add new tag",
-            search: "Search tags",
-            edit: "Edit tag",
-            lock: "Lock tag",
-            moveUp: "Move tag up",
-            moveDown: "Move tag down",
-            delete: "Delete tag",
+            add: "Add new label",
+            search: "Search labels",
+            edit: "Edit label",
+            lock: "Lock label",
+            moveUp: "Move label up",
+            moveDown: "Move label down",
+            delete: "Delete label",
         },
     },
     connections: {

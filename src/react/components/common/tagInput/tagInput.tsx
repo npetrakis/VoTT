@@ -79,7 +79,7 @@ export class TagInput extends React.Component<ITagInputProps, ITagInputState> {
         return (
             <div className="tag-input condensed-list">
                 <h6 className="condensed-list-header tag-input-header bg-darker-2 p-2">
-                    <span className="condensed-list-title tag-input-title">Tags</span>
+                    <span className="condensed-list-title tag-input-title">Labels</span>
                     <TagInputToolbar
                         selectedTag={this.state.selectedTag}
                         onAddTags={() => this.setState({ addTags: !this.state.addTags })}
@@ -102,7 +102,7 @@ export class TagInput extends React.Component<ITagInputProps, ITagInputState> {
                                 type="text"
                                 onKeyDown={this.onSearchKeyDown}
                                 onChange={(e) => this.setState({ searchQuery: e.target.value })}
-                                placeholder="Search tags"
+                                placeholder="Search labels"
                                 autoFocus={true}
                             />
                             <i className="tag-row-icon fas fa-search" />
@@ -119,7 +119,7 @@ export class TagInput extends React.Component<ITagInputProps, ITagInputState> {
                                 className="tag-input-box"
                                 type="text"
                                 onKeyDown={this.onAddTagKeyDown}
-                                placeholder="Add new tag"
+                                placeholder="Add new label"
                                 autoFocus={true}
                             />
                             <i className="tag-input-row-icon fas fa-tag" />
