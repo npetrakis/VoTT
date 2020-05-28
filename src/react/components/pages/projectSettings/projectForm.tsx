@@ -67,9 +67,9 @@ export default class ProjectForm extends React.Component<IProjectFormProps, IPro
         super(props, context);
         let formData = null;
         if (props.project) {
-            this.project = props.project;
+            this.project = { ...props.project};
             formData = {
-                connection: this.props.project.sourceConnection,
+                connection: { ...this.props.project.sourceConnection },
                 tags: this.props.project.tags,
             };
         }
