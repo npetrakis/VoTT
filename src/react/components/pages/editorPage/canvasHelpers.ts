@@ -22,14 +22,15 @@ export default class CanvasHelpers {
      * @param tag Tag to toggle
      */
     public static toggleTag(tags: string[], tag: string): string[] {
-        const tagIndex = tags.findIndex((existingTag) => existingTag === tag);
-        if (tagIndex === -1) {
-            // Tag isn't found within region tags, add it
-            return [...tags, tag];
-        } else {
-            // Tag is within region tags, remove it
-            return tags.filter((t) => t !== tag);
-        }
+        return [tag];
+        // const tagIndex = tags.findIndex((existingTag) => existingTag === tag);
+        // if (tagIndex === -1) {
+        //     // Tag isn't found within region tags, add it
+        //     return [...tags, tag];
+        // } else {
+        //     // Tag is within region tags, remove it
+        //     return tags.filter((t) => t !== tag);
+        // }
     }
 
     /**
@@ -143,7 +144,7 @@ export default class CanvasHelpers {
                 return projectTag ? new Tag(projectTag.name, projectTag.color) : null;
             })
             .filter((tag) => tag !== null);
-
+        console.log("Hello")
         return new TagsDescriptor(tags);
     }
 
