@@ -144,7 +144,6 @@ export default class CanvasHelpers {
                 return projectTag ? new Tag(projectTag.name, projectTag.color) : null;
             })
             .filter((tag) => tag !== null);
-        console.log("Hello")
         return new TagsDescriptor(tags);
     }
 
