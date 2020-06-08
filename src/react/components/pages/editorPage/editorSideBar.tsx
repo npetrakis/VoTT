@@ -79,7 +79,7 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
     }
 
     private getRowHeight = (width: number) => {
-        return width / (4 / 3) + 16;
+        return width / (4 / 3) + 16 * 4;
     }
 
     private selectAsset = (selectedAsset: IAsset): void => {
@@ -116,15 +116,40 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
                     <AssetPreview asset={asset} />
                 </div>
                 <div className="asset-item-metadata">
-                    <span className="asset-filename" title={asset.name}>{asset.name}</span>
-                    {asset.size &&
-                        <span>
-                            {asset.size.width} x {asset.size.height}
-                        </span>
-                    }
+                    <div className="asset-filename" title={this.getTimestamp(asset)}>{this.getTimestamp(asset)}</div>
+                    <div className="asset-filename" title={this.getUser(asset)}>{this.getUser(asset)}</div>
+                    <div className="asset-filename" title={this.getDevice(asset)}>{this.getDevice(asset)}</div>
+                    <div className="asset-filename" title={this.getVersion(asset)}>{this.getVersion(asset)}</div>
                 </div>
             </div>
         );
+    }
+
+    private getTimestamp = (asset: IAsset): string => {
+        const pieces = asset.name.split("-");
+        const dateTimePieces = pieces[2].split("_");
+        const dateName = dateTimePieces.slice(0, 3).reverse().join("/");
+        const timeName = dateTimePieces.slice(3, dateTimePieces.length - 1).join(":");
+        return dateName + " " + timeName;
+    }
+
+    private getUser = (asset: IAsset): string => {
+        const pieces = asset.name.split("-");
+        return pieces[1];
+    }
+
+    private getDevice = (asset: IAsset): string => {
+        const pieces = asset.name.split("-");
+        const devicePieces = pieces[3].split("_");
+        let deviceName = devicePieces.join(" ");
+        deviceName = deviceName.substring(0, deviceName.length - 4);
+        return deviceName;
+    }
+
+    private getVersion = (asset: IAsset): string => {
+        const pieces = asset.name.split("-");
+        const version = pieces[0];
+        return version;
     }
 
     private renderBadges = (asset: IAsset): JSX.Element => {
