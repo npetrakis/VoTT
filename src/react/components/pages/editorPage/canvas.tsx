@@ -303,7 +303,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         if (lockedTags && lockedTags.length) {
             this.editor.RM.updateTagsById(id, CanvasHelpers.getTagsDescriptor(this.props.project.tags, newRegion));
         }
-        this.updateAssetRegions([...this.state.currentAsset.regions, newRegion]);
+        this.updateAssetRegions([newRegion]);
         if (this.props.onSelectedRegionsChanged) {
             this.props.onSelectedRegionsChanged([newRegion]);
         }
