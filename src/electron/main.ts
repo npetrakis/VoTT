@@ -70,7 +70,6 @@ function onToggleDevTools() {
  */
 function registerContextMenu(browserWindow: BrowserWindow): void {
     const selectionMenu = Menu.buildFromTemplate([
-        { role: "copy", accelerator: "CmdOrCtrl+C" },
         { type: "separator" },
         { role: "selectall", accelerator: "CmdOrCtrl+A" },
     ]);
@@ -80,7 +79,6 @@ function registerContextMenu(browserWindow: BrowserWindow): void {
         { role: "redo", accelerator: "CmdOrCtrl+Shift+Z" },
         { type: "separator" },
         { role: "cut", accelerator: "CmdOrCtrl+X" },
-        { role: "copy", accelerator: "CmdOrCtrl+C" },
         { role: "paste", accelerator: "CmdOrCtrl+V" },
         { type: "separator" },
         { role: "selectall", accelerator: "CmdOrCtrl+A" },

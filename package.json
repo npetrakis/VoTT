@@ -1,6 +1,6 @@
 {
     "name": "vott",
-    "version": "2.1.0",
+    "version": "2.1.2",
     "author": {
         "name": "Microsoft",
         "url": "https://github.com/Microsoft/VoTT"
@@ -84,7 +84,10 @@
         "test:coverage": "npm run test -- --coverage",
         "plato": "scripts/generate-report.sh -o report -v $(node -pe \"require('./package.json').version\") -c $(git rev-parse --short HEAD)",
         "postinstall": "electron-builder install-app-deps",
-        "predebug": "npm run build && npm run webpack:dev"
+        "predebug": "npm run build && npm run webpack:dev",
+        "docker-build": "docker build -f Dockerfile.prod -t vott-hessers:v$(node -pe \"require('./package.json').version\") .",
+        "docker-run": "docker run -it --rm -p 1337:80 vott-hessers:v$(node -pe \"require('./package.json').version\")",
+        "docker-save": "docker save vott-hessers:v$(node -pe \"require('./package.json').version\") > v$(node -pe \"require('./package.json').version\").tar"
     },
     "eslintConfig": {
         "extends": "react-app"

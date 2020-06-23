@@ -106,6 +106,32 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
     private rowRenderer = ({ key, index, style }): JSX.Element => {
         const asset = this.props.assets[index];
         const selectedAsset = this.props.selectedAsset;
+        const info = asset.name.split(RegExp("[.-]"))
+            .map( (entry) => {
+                if (entry.match(RegExp("^v.+$"))) {
+                    return entry.split("_").join(".");
+                } else if (entry.match(RegExp("^\\d+_\\d+_\\d+_\\d+_\\d+_\\d+_\\d+$"))) {
+                    const dateTimePieces = entry.split("_");
+                    const dateName = dateTimePieces.slice(0, 3).reverse().join("/");
+                    const timeName = dateTimePieces.slice(3, dateTimePieces.length - 1).join(":");
+                    return dateName + " " + timeName;
+                } else {
+                    return entry.split("_").join(" ");
+                }
+            });
+        const sortedImportant = [];
+        const notSorted = [];
+        info.splice(0, info.length - 1).forEach( (entry) => {
+            if (entry.match(RegExp("^\\d+\\/\\d+\\/\\d+ \\d+:\\d+:\\d+$")) ||
+                entry.match(RegExp("^\\d+$")) ||
+                entry.match(RegExp("^[A-Z]+\\d*$"))) {
+                sortedImportant.push(entry);
+            } else {
+                notSorted.push(entry);
+            }
+        });
+        const elements = sortedImportant.concat(notSorted)
+            .map( (entry) => <div className="asset-filename">{entry}</div>);
 
         return (
             <div key={key} style={style}
@@ -116,40 +142,10 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
                     <AssetPreview asset={asset} />
                 </div>
                 <div className="asset-item-metadata">
-                    <div className="asset-filename" title={this.getTimestamp(asset)}>{this.getTimestamp(asset)}</div>
-                    <div className="asset-filename" title={this.getUser(asset)}>{this.getUser(asset)}</div>
-                    <div className="asset-filename" title={this.getDevice(asset)}>{this.getDevice(asset)}</div>
-                    <div className="asset-filename" title={this.getVersion(asset)}>{this.getVersion(asset)}</div>
+                    {elements}
                 </div>
             </div>
         );
-    }
-
-    private getTimestamp = (asset: IAsset): string => {
-        const pieces = asset.name.split("-");
-        const dateTimePieces = pieces[2].split("_");
-        const dateName = dateTimePieces.slice(0, 3).reverse().join("/");
-        const timeName = dateTimePieces.slice(3, dateTimePieces.length - 1).join(":");
-        return dateName + " " + timeName;
-    }
-
-    private getUser = (asset: IAsset): string => {
-        const pieces = asset.name.split("-");
-        return pieces[1];
-    }
-
-    private getDevice = (asset: IAsset): string => {
-        const pieces = asset.name.split("-");
-        const devicePieces = pieces[3].split("_");
-        let deviceName = devicePieces.join(" ");
-        deviceName = deviceName.substring(0, deviceName.length - 4);
-        return deviceName;
-    }
-
-    private getVersion = (asset: IAsset): string => {
-        const pieces = asset.name.split("-");
-        const version = pieces[0];
-        return version;
     }
 
     private renderBadges = (asset: IAsset): JSX.Element => {

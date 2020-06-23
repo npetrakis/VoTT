@@ -234,8 +234,6 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
                 return "CmdOrCtrl+Y";
             case "cut":
                 return "CmdOrCtrl+X";
-            case "copy":
-                return "CmdOrCtrl+C";
             case "paste":
                 return "CmdOrCtrl+V";
             case "selectall":

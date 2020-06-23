@@ -16,7 +16,7 @@
       width: 100%;
 
       .asset-list {
-        user-select: none;
+        user-select: text;
       }
 
       .asset-list:focus {

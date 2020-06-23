@@ -556,11 +556,6 @@ describe("Editor Page Component", () => {
             expect(removeAllRegionsConfirm).toBeCalled();
         });
 
-        it("Calls copy regions with hot key", () => {
-            dispatchKeyEvent("CmdOrCtrl+c");
-            expect(copyRegions).toBeCalled();
-        });
-
         it("Calls cut regions with hot key", () => {
             dispatchKeyEvent("CmdOrCtrl+x");
             expect(cutRegions).toBeCalled();
